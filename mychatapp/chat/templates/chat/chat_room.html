@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Room</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-top: 50px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            font-size: 24px;
+        }
+
+        #messages {
+            max-height: 400px;
+            overflow-y: auto;
+            padding: 10px;
+            margin-bottom: 20px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        #messages div {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .message-sender {
+            font-weight: bold;
+            color: #007bff;
+            margin-top: 5px;
+            font-size: .8rem;
+        }
+
+        .message-content {
+            color: #333;
+            margin-bottom: 5px;
+            font-size: 1.2rem;
+        }
+
+        /* Align sender messages to the left */
+        .message-left {
+            align-items: flex-start;
+        }
+
+        /* Align receiver messages to the right */
+        .message-right {
+            align-items: flex-end;
+        }
+
+        #message-input {
+            width: calc(100% - 90px);
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            margin-bottom: 10px;
+        }
+
+        #send-button {
+            width: 80px;
+            padding: 10px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #send-button:hover {
+            background-color: #45a049;
+        }
+
+        .chat-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Chat with {{ other_user.username }}</h2>
+        <div id="messages">
+            {% for message in messages %}
+                <div class="message {% if message.sender.username != request.user.username %}message-left{% else %}message-right{% endif %}">
+                    <span class="message-content">{{ message.content }}</span>
+                    <span class="message-sender">{{ message.sender.username }}</span>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="chat-footer">
+            <input id="message-input" type="text" placeholder="Type a message..." />
+            <button id="send-button" onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <script>
+        const roomName = "{{ room_name }}";  // This will now always be consistent
+        const sender = "{{ request.user.username }}";
+        const receiver = "{{ other_user.username }}";
+        const chatSocket = new WebSocket(
+            'ws://' + window.location.host + '/ws/chat/' + roomName + '/'
+        );
+    
+        chatSocket.onmessage = function(e) {
+            const data = JSON.parse(e.data);
+            const messageBox = document.getElementById('messages');
+            const newMessage = document.createElement('div');
+            const messageClass = data.sender !== sender ? 'message-left' : 'message-right';
+            newMessage.classList.add('message', messageClass);
+            newMessage.innerHTML = `
+                <span class="message-content">${data.message}</span>
+                <span class="message-sender">${data.sender}</span>
+            `;
+            messageBox.appendChild(newMessage);
+
+            // Scroll to the latest message
+            messageBox.scrollTop = messageBox.scrollHeight;
+        };
+    
+        function sendMessage() {
+            const messageInput = document.getElementById('message-input');
+            chatSocket.send(JSON.stringify({
+                'message': messageInput.value,
+                'sender': sender,
+                'receiver': receiver,
+            }));
+            messageInput.value = '';
+        }
+    </script>
+</body>
+</html>

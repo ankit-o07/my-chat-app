@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0 15px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            font-size: 16px;
+        }
+
+        button[type="submit"] {
+            padding: 12px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        .form-group label {
+            font-size: 16px;
+            color: #333;
+        }
+
+        .form-group input {
+            font-size: 14px;
+        }
+
+        .message {
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .message a {
+            color: #4CAF50;
+            text-decoration: none;
+        }
+
+        .message a:hover {
+            text-decoration: underline;
+        }
+
+        /* Style for the sample credentials section */
+        .sample-credentials {
+            background-color: #f0f0f0;
+            padding: 15px;
+            margin-top: 20px;
+            border: 1px dashed #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .sample-credentials h3 {
+            margin-bottom: 15px;
+        }
+
+        .sample-credentials .credential {
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #e8f4e8;
+            border-radius: 5px;
+        }
+
+        .sample-credentials p {
+            margin: 5px 0;
+        }
+
+        .sample-credentials span {
+            font-weight: bold;
+            color: #4CAF50;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Login</h2>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Login</button>
+        </form>
+
+        <div class="message">
+            <p>Don't have an account? <a href="{% url 'signup' %}">Create one here</a>.</p>
+        </div>
+
+        <!-- Multiple Sample Credentials Section -->
+        <div class="sample-credentials">
+            <h3>Sample Credentials for Testing:</h3>
+
+            <!-- Sample 1 -->
+            <div class="credential">
+                <p><span>Username:</span> test1</p>
+                <p><span>Password:</span> okok123@</p>
+            </div>
+
+            <!-- Sample 2 -->
+            <div class="credential">
+                <p><span>Username:</span> test2</p>
+                <p><span>Password:</span> okok123@</p>
+            </div>
+
+            <!-- Sample 3 -->
+            <div class="credential">
+                <p><span>Username:</span> test3</p>
+                <p><span>Password:</span> okok123@</p>
+            </div>
+
+            <!-- Sample 4 -->
+            <div class="credential">
+                <p><span>Username:</span> test4</p>
+                <p><span>Password:</span> okok123@</p>
+            </div>
+
+            <!-- Sample 5 -->
+            <div class="credential">
+                <p><span>Admin Username:</span> ankit</p>
+                <p><span>Password:</span> 123</p>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>
